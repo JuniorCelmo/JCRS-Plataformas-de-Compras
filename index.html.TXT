@@ -6,7 +6,7 @@
     <title>JCRS Plataformas de Compras</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Estilos CSS (Antigo style.css) */
+        /* Estilos CSS */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
         :root {
@@ -15,6 +15,10 @@
             --light-text: #ECF0F1; /* Branco/Cinza claro para texto */
             --button-hover: #C0392B; /* Vermelho mais escuro para hover */
             --card-bg: #34495E;    /* Cor de fundo para os cards dos produtos */
+            --modal-bg: rgba(0, 0, 0, 0.7); /* Fundo escuro para o modal */
+            --modal-content-bg: #4A637C; /* Cor de fundo do conteúdo do modal */
+            --modal-button-bg: #1ABC9C; /* Verde/Azul para botões de plataforma */
+            --modal-button-hover: #16A085; /* Hover dos botões de plataforma */
         }
 
         body {
@@ -52,7 +56,7 @@
         /* Container de Produtos */
         #product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Colunas responsivas */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Padrão: 280px */
             gap: 25px; /* Espaçamento entre os cards */
             padding: 2em;
             max-width: 1200px;
@@ -70,7 +74,8 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Para empurrar o botão para baixo */
+            justify-content: space-between;
+            cursor: pointer; /* Indica que o card é clicável */
         }
 
         .product-card:hover {
@@ -87,7 +92,7 @@
 
         .product-info {
             padding: 1.5em;
-            flex-grow: 1; /* Permite que as informações ocupem o espaço necessário */
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -114,27 +119,10 @@
             margin-bottom: 1em;
         }
 
-        /* Botão "Acessar Produto" */
-        .access-button {
-            display: block; /* Ocupa a largura total */
-            width: calc(100% - 2em); /* Largura com padding */
-            padding: 0.8em 1.5em;
-            margin: 1em auto; /* Centraliza o botão dentro do card */
-            background-color: var(--primary-red);
-            color: var(--light-text);
-            text-decoration: none;
-            border-radius: 50px; /* Botão arredondado */
-            font-weight: 700;
-            font-size: 1.1em;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .access-button:hover {
-            background-color: var(--button-hover);
-            transform: translateY(-2px); /* Efeito de "apertar" */
+        /* Botão "Acessar Produto" (Agora esconde no card principal) */
+        /* Removendo o botão direto do card, pois o pop-up será o gatilho */
+        .access-button-hidden {
+            display: none;
         }
 
         /* Rodapé */
@@ -144,8 +132,102 @@
             text-align: center;
             padding: 1.5em 1em;
             font-size: 0.9em;
-            margin-top: auto; /* Empurra o rodapé para baixo */
+            margin-top: auto;
             box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- Modal (Pop-up) Styles --- */
+        .modal {
+            display: none; /* Escondido por padrão */
+            position: fixed; /* Fica por cima de tudo */
+            z-index: 1000; /* Um valor alto para garantir que fique na frente */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; /* Permite scroll se o conteúdo for muito grande */
+            background-color: var(--modal-bg);
+            display: flex; /* Para centralizar o conteúdo */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--modal-content-bg);
+            margin: auto;
+            padding: 2em;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            position: relative;
+            animation: fadeIn 0.3s ease-out; /* Animação ao aparecer */
+        }
+
+        .modal-content h2 {
+            text-align: center;
+            color: var(--light-text);
+            margin-top: 0;
+            margin-bottom: 1.5em;
+            font-size: 1.8em;
+            border-bottom: 2px solid var(--primary-red);
+            padding-bottom: 0.5em;
+        }
+
+        .modal-platforms {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* Espaçamento entre os botões */
+        }
+
+        .modal-platform-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1em 1.5em;
+            background-color: var(--modal-button-bg);
+            color: var(--light-text);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-platform-button:hover {
+            background-color: var(--modal-button-hover);
+            transform: translateY(-2px);
+        }
+
+        .modal-platform-button img {
+            height: 24px; /* Tamanho do ícone da plataforma */
+            margin-right: 10px;
+            filter: brightness(0) invert(1); /* Deixa os ícones brancos */
+        }
+
+        .close-button {
+            color: var(--light-text);
+            font-size: 2.2em;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--primary-red);
+        }
+
+        /* Animação para o modal */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Media Queries para Responsividade */
@@ -158,26 +240,76 @@
                 font-size: 1em;
             }
 
+            /* Duas colunas em telas menores para tablets e celulares maiores */
             #product-grid {
-                grid-template-columns: 1fr; /* Uma coluna em telas pequenas */
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* Ajustado para 2 colunas */
+                gap: 15px; /* Reduz o gap para caber mais */
                 padding: 1em;
             }
 
             .product-card {
-                margin: 0 0.5em; /* Pequena margem lateral em telas pequenas */
+                margin: 0; /* Remove margem extra */
+            }
+
+            .product-card img {
+                height: 150px; /* Reduz a altura da imagem no mobile */
+            }
+
+            .product-info {
+                padding: 1em; /* Reduz padding do info */
             }
 
             .product-info h3 {
-                font-size: 1.2em;
+                font-size: 1.1em; /* Reduz tamanho da fonte */
+            }
+
+            .product-info p {
+                font-size: 0.8em;
             }
 
             .price {
-                font-size: 1.4em;
+                font-size: 1.2em;
             }
 
-            .access-button {
+            .modal-content {
+                width: 95%;
+                padding: 1.5em;
+            }
+
+            .modal-content h2 {
+                font-size: 1.5em;
+            }
+
+            .modal-platform-button {
                 font-size: 1em;
-                padding: 0.7em 1.2em;
+                padding: 0.8em 1em;
+            }
+
+            .modal-platform-button img {
+                height: 20px;
+                margin-right: 8px;
+            }
+
+            .close-button {
+                font-size: 1.8em;
+                top: 5px;
+                right: 15px;
+            }
+        }
+
+        /* Media Query para telas muito pequenas (ex: celulares menores) */
+        @media (max-width: 480px) {
+            #product-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Ainda tentando duas, mas menores */
+            }
+            .product-card img {
+                height: 120px;
+            }
+            .product-info h3 {
+                font-size: 1em;
+            }
+            .product-info p {
+                display: none; /* Esconde a descrição para economizar espaço */
             }
         }
     </style>
@@ -195,99 +327,89 @@
         <p>&copy; 2025 JCRS Plataformas de Compras. Todos os direitos reservados.</p>
     </footer>
 
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="modalProductName"></h2>
+            <div id="modalPlatforms" class="modal-platforms">
+                </div>
+        </div>
+    </div>
+
     <script>
-        // Código JavaScript (Antigo script.js)
+        // Código JavaScript
         document.addEventListener('DOMContentLoaded', () => {
             const productGrid = document.getElementById('product-grid');
+            const productModal = document.getElementById('productModal');
+            const closeButton = document.querySelector('.close-button');
+            const modalProductName = document.getElementById('modalProductName');
+            const modalPlatforms = document.getElementById('modalPlatforms');
 
             // Array de objetos com os dados dos seus produtos
-            // ADICIONE SEUS PRODUTOS AQUI!
+            // AGORA COM UM ARRAY DE LINKS PARA CADA PRODUTO!
             const products = [
                 {
                     name: "Smart TV 4K Ultra HD 50 polegadas",
                     description: "A melhor experiência de entretenimento com cores vibrantes e som imersivo.",
                     price: "R$ 2.499,00",
                     image: "imagens/tv.jpg", // Certifique-se de que a imagem está na pasta 'imagens'
-                    link: "https://seulink.amazon.com/tv4k" // SEU LINK DE AFILIADO AQUI (Amazon, Magazine Luiza, etc.)
+                    links: [ // AGORA UM ARRAY DE LINKS!
+                        { platform: "Amazon", url: "https://seulink.amazon.com/tv4k", icon: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" },
+                        { platform: "Magazine Luiza", url: "https://seulink.magalu.com/tv4k", icon: "https://upload.wikimedia.org/wikipedia/commons/d/da/Magalu_logo.svg" },
+                        { platform: "Casas Bahia", url: "https://seulink.casasbahia.com/tv4k", icon: "https://upload.wikimedia.org/wikipedia/commons/e/e4/Casas_Bahia_logo.svg" }
+                    ]
                 },
                 {
                     name: "Fone de Ouvido Bluetooth Premium",
                     description: "Cancelamento de ruído, bateria de longa duração e áudio cristalino para o seu dia a dia.",
                     price: "R$ 349,90",
-                    image: "imagens/fone.jpg", // Certifique-se de que a imagem está na pasta 'imagens'
-                    link: "https://seulink.shopee.com/fonebluetooth" // SEU LINK DE AFILIADO AQUI (Shopee, AliExpress, etc.)
+                    image: "imagens/fone.jpg",
+                    links: [
+                        { platform: "Shopee", url: "https://seulink.shopee.com/fonebluetooth", icon: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Shopee_logo_icon.svg" },
+                        { platform: "AliExpress", url: "https://seulink.aliexpress.com/fonebluetooth", icon: "https://upload.wikimedia.org/wikipedia/commons/f/fe/AliExpress_Logo.svg" }
+                    ]
                 },
                 {
                     name: "Cafeteira Expresso Automática",
                     description: "Prepare seu café favorito com um toque. Design elegante e fácil de limpar.",
                     price: "R$ 899,00",
-                    image: "imagens/cafeteira.jpg", // Certifique-se de que a imagem está na pasta 'imagens'
-                    link: "https://seulink.magalu.com/cafeteira" // SEU LINK DE AFILIADO AQUI
+                    image: "imagens/cafeteira.jpg",
+                    links: [
+                        { platform: "Mercado Livre", url: "https://seulink.mercadolivre.com/cafeteira", icon: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Mercado_Livre_Logo.svg" },
+                        { platform: "Magazine Luiza", url: "https://seulink.magalu.com/cafeteira", icon: "https://upload.wikimedia.org/wikipedia/commons/d/da/Magalu_logo.svg" }
+                    ]
                 },
                 {
                     name: "Notebook Gamer Alta Performance",
                     description: "Perfeito para jogos e trabalho pesado. Processador de última geração e placa de vídeo potente.",
                     price: "R$ 5.999,00",
-                    image: "imagens/notebook.jpg", // Certifique-se de que a imagem está na pasta 'imagens'
-                    link: "https://seulink.outraplataforma.com/notebookgamer" // SEU LINK DE AFILIADO AQUI
+                    image: "imagens/notebook.jpg",
+                    links: [
+                        { platform: "Amazon", url: "https://seulink.amazon.com/notebookgamer", icon: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" },
+                        { platform: "Kabum!", url: "https://seulink.kabum.com/notebookgamer", icon: "https://upload.wikimedia.org/wikipedia/commons/a/a2/Kabum%21_logo.svg" }
+                    ]
                 },
                 {
                     name: "Kit Essencial de Maquiagem",
                     description: "Tudo o que você precisa para uma make completa e profissional. Cores vibrantes e duradouras.",
                     price: "R$ 179,50",
                     image: "imagens/maquiagem.jpg",
-                    link: "https://seulink.beleza.com/kitmaquiagem"
+                    links: [
+                        { platform: "Beleza na Web", url: "https://seulink.belezanaweb.com/kitmaquiagem", icon: "https://upload.wikimedia.org/wikipedia/commons/c/c8/Beleza_na_Web_logo.svg" },
+                        { platform: "O Boticário", url: "https://seulink.oboticario.com/kitmaquiagem", icon: "https://upload.wikimedia.org/wikipedia/commons/a/ab/O_Boticario_logo.svg" }
+                    ]
                 },
                 {
                     name: "Smartwatch Fitness Monitor Cardíaco",
                     description: "Monitore sua saúde e atividades físicas com estilo. Bateria de longa duração e design moderno.",
                     price: "R$ 289,90",
                     image: "imagens/smartwatch.jpg",
-                    link: "https://seulink.eletronicos.com/smartwatch"
-                },
-  		{
-                    name: "Smart TV 4K Ultra HD 50 polegadas",
-                    description: "A melhor experiência de entretenimento com cores vibrantes e som imersivo.",
-                    price: "R$ 2.499,00",
-                    image: "imagens/tv.jpg", // Certifique-se de que a imagem está na pasta 'imagens'
-                    link: "https://seulink.amazon.com/tv4k" // SEU LINK DE AFILIADO AQUI (Amazon, Magazine Luiza, etc.)
-                },
-                {
-                    name: "Fone de Ouvido Bluetooth Premium",
-                    description: "Cancelamento de ruído, bateria de longa duração e áudio cristalino para o seu dia a dia.",
-                    price: "R$ 349,90",
-                    image: "imagens/fone.jpg", // Certifique-se de que a imagem está na pasta 'imagens'
-                    link: "https://seulink.shopee.com/fonebluetooth" // SEU LINK DE AFILIADO AQUI (Shopee, AliExpress, etc.)
-                },
-                {
-                    name: "Cafeteira Expresso Automática",
-                    description: "Prepare seu café favorito com um toque. Design elegante e fácil de limpar.",
-                    price: "R$ 899,00",
-                    image: "imagens/cafeteira.jpg", // Certifique-se de que a imagem está na pasta 'imagens'
-                    link: "https://seulink.magalu.com/cafeteira" // SEU LINK DE AFILIADO AQUI
-                },
-                {
-                    name: "Notebook Gamer Alta Performance",
-                    description: "Perfeito para jogos e trabalho pesado. Processador de última geração e placa de vídeo potente.",
-                    price: "R$ 5.999,00",
-                    image: "imagens/notebook.jpg", // Certifique-se de que a imagem está na pasta 'imagens'
-                    link: "https://seulink.outraplataforma.com/notebookgamer" // SEU LINK DE AFILIADO AQUI
-                },
-                {
-                    name: "Kit Essencial de Maquiagem",
-                    description: "Tudo o que você precisa para uma make completa e profissional. Cores vibrantes e duradouras.",
-                    price: "R$ 179,50",
-                    image: "imagens/maquiagem.jpg",
-                    link: "https://seulink.beleza.com/kitmaquiagem"
-                },
-                {
-                    name: "Smartwatch Fitness Monitor Cardíaco",
-                    description: "Monitore sua saúde e atividades físicas com estilo. Bateria de longa duração e design moderno.",
-                    price: "R$ 289,90",
-                    image: "imagens/smartwatch.jpg",
-                    link: "https://seulink.eletronicos.com/smartwatch"
+                    links: [
+                        { platform: "AliExpress", url: "https://seulink.aliexpress.com/smartwatch", icon: "https://upload.wikimedia.org/wikipedia/commons/f/fe/AliExpress_Logo.svg" },
+                        { platform: "Shopee", url: "https://seulink.shopee.com/smartwatch", icon: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Shopee_logo_icon.svg" },
+                        { platform: "Mercado Livre", url: "https://seulink.mercadolivre.com/smartwatch", icon: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Mercado_Livre_Logo.svg" }
+                    ]
                 }
-
                 // Adicione mais produtos seguindo o mesmo padrão:
                 /*
                 {
@@ -295,7 +417,10 @@
                     description: "Breve descrição do produto para atrair a atenção.",
                     price: "R$ XXX,XX",
                     image: "imagens/nomedaimagem.jpg",
-                    link: "SEU_LINK_DE_AFILIADO_AQUI"
+                    links: [
+                        { platform: "NomeDaLoja1", url: "SEU_LINK_AFILIADO_LOJA1", icon: "URL_DO_ICONE_DA_LOJA1" },
+                        { platform: "NomeDaLoja2", url: "SEU_LINK_AFILIADO_LOJA2", icon: "URL_DO_ICONE_DA_LOJA2" }
+                    ]
                 },
                 */
             ];
@@ -305,17 +430,61 @@
                 const productCard = document.createElement('div');
                 productCard.classList.add('product-card');
 
+                // Adiciona um listener para abrir o modal quando o card for clicado
+                productCard.addEventListener('click', () => {
+                    openModal(product);
+                });
+
                 productCard.innerHTML = `
                     <img src="${product.image}" alt="${product.name}">
                     <div class="product-info">
                         <h3>${product.name}</h3>
                         <p>${product.description}</p>
                         <div class="price">${product.price}</div>
-                        <a href="${product.link}" target="_blank" class="access-button">Acessar Produto</a>
-                    </div>
+                        </div>
                 `;
                 return productCard;
             }
+
+            // Função para abrir o modal
+            function openModal(product) {
+                modalProductName.textContent = product.name; // Define o nome do produto no modal
+                modalPlatforms.innerHTML = ''; // Limpa os botões anteriores
+
+                // Cria os botões para cada plataforma de link
+                product.links.forEach(link => {
+                    const button = document.createElement('a');
+                    button.href = link.url;
+                    button.target = "_blank"; // Abre em nova aba
+                    button.classList.add('modal-platform-button');
+
+                    // Adiciona ícone se houver
+                    if (link.icon) {
+                        const icon = document.createElement('img');
+                        icon.src = link.icon;
+                        icon.alt = link.platform;
+                        button.appendChild(icon);
+                    }
+
+                    button.textContent += `Comprar na ${link.platform}`;
+                    modalPlatforms.appendChild(button);
+                });
+
+                productModal.style.display = 'flex'; // Torna o modal visível
+            }
+
+            // Função para fechar o modal
+            function closeModal() {
+                productModal.style.display = 'none';
+            }
+
+            // Event Listeners para o modal
+            closeButton.addEventListener('click', closeModal); // Fecha ao clicar no 'X'
+            window.addEventListener('click', (event) => { // Fecha ao clicar fora do conteúdo do modal
+                if (event.target == productModal) {
+                    closeModal();
+                }
+            });
 
             // Adiciona cada produto ao grid
             products.forEach(product => {
