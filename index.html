@@ -10,7 +10,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
         :root {
-            --primary-red: #E74C3C; /* Vermelho principal */
+            --primary-red: #E74C3C; /* Vermelho principal (Hospital Vermelho) */
             --dark-bg: #2C3E50;    /* Preto/Azul escuro para fundo */
             --light-text: #ECF0F1; /* Branco/Cinza claro para texto */
             --button-hover: #C0392B; /* Vermelho mais escuro para hover */
@@ -19,6 +19,7 @@
             --modal-content-bg: #4A637C; /* Cor de fundo do conteúdo do modal */
             --modal-button-bg: #1ABC9C; /* Verde/Azul para botões de plataforma */
             --modal-button-hover: #16A085; /* Hover dos botões de plataforma */
+            --alert-bg: #E67E22; /* Laranja para mensagens de alerta */
         }
 
         body {
@@ -33,35 +34,52 @@
             min-height: 100vh;
         }
 
-        /* Cabeçalho */
+        /* Cabeçalho fixo e responsivo */
         header {
             background-color: var(--primary-red);
             color: var(--light-text);
-            padding: 2em 1em;
+            padding: 1em; /* Menor padding para ser mais compacto */
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: sticky; /* Fixo ao topo */
+            top: 0; /* Alinha no topo */
+            z-index: 999; /* Garante que fique acima de outros conteúdos */
+            width: 100%; /* Ocupa a largura total */
+            box-sizing: border-box; /* Inclui padding na largura */
         }
 
         header h1 {
             margin: 0;
-            font-size: 2.5em;
+            font-size: 2em; /* Tamanho ajustado para o cabeçalho */
             font-weight: 700;
         }
 
         header p {
-            font-size: 1.1em;
+            font-size: 0.9em; /* Texto menor no cabeçalho */
             opacity: 0.9;
+            margin: 0.2em 0 0; /* Espaçamento ajustado */
         }
+
+        /* Main para a rolagem das miniaturas */
+        main {
+            flex-grow: 1; /* Permite que o conteúdo principal ocupe o espaço restante */
+            overflow-y: auto; /* Habilita a rolagem vertical */
+            -webkit-overflow-scrolling: touch; /* Rolagem suave no iOS */
+            padding-top: 0; /* Padding será controlado pelo #product-grid */
+            padding-bottom: 0; /* Padding será controlado pelo #product-grid */
+            width: 100%; /* Garante que o main ocupe 100% da largura */
+            box-sizing: border-box;
+        }
+
 
         /* Container de Produtos */
         #product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Padrão: 280px */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Padrão Desktop */
             gap: 25px; /* Espaçamento entre os cards */
             padding: 2em;
             max-width: 1200px;
-            margin: 2em auto; /* Centraliza e adiciona margem */
-            flex-grow: 1; /* Permite que o grid ocupe o espaço restante */
+            margin: 2em auto; /* Centraliza no desktop */
         }
 
         /* Card de Produto */
@@ -69,24 +87,23 @@
             background-color: var(--card-bg);
             border-radius: 10px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-            overflow: hidden; /* Garante que a imagem não vaze */
+            overflow: hidden;
             text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            cursor: pointer; /* Indica que o card é clicável */
         }
 
         .product-card:hover {
-            transform: translateY(-8px); /* Efeito de elevação ao passar o mouse */
+            transform: translateY(-8px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
         }
 
         .product-card img {
             width: 100%;
-            height: 200px; /* Altura fixa para as imagens */
-            object-fit: cover; /* Garante que a imagem preencha o espaço sem distorcer */
+            height: 200px; /* Altura fixa para as imagens no desktop */
+            object-fit: cover;
             border-bottom: 2px solid var(--primary-red);
         }
 
@@ -119,35 +136,56 @@
             margin-bottom: 1em;
         }
 
-        /* Botão "Acessar Produto" (Agora esconde no card principal) */
-        /* Removendo o botão direto do card, pois o pop-up será o gatilho */
-        .access-button-hidden {
-            display: none;
+        /* Botão "Acessar Produto" */
+        .access-button {
+            display: block;
+            width: calc(100% - 2em);
+            padding: 0.8em 1.5em;
+            margin: 1em auto;
+            background-color: var(--primary-red);
+            color: var(--light-text);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        /* Rodapé */
+        .access-button:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Rodapé fixo e responsivo */
         footer {
             background-color: var(--primary-red);
             color: var(--light-text);
             text-align: center;
-            padding: 1.5em 1em;
-            font-size: 0.9em;
+            padding: 1em; /* Menor padding para ser mais compacto */
+            font-size: 0.8em; /* Tamanho da fonte menor */
             margin-top: auto;
             box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+            position: sticky; /* Fixo na parte inferior */
+            bottom: 0; /* Alinha na parte inferior */
+            z-index: 999;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         /* --- Modal (Pop-up) Styles --- */
         .modal {
-            display: none; /* Escondido por padrão */
-            position: fixed; /* Fica por cima de tudo */
-            z-index: 1000; /* Um valor alto para garantir que fique na frente */
+            display: none;
+            position: fixed;
+            z-index: 1000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            overflow: auto; /* Permite scroll se o conteúdo for muito grande */
+            overflow: auto;
             background-color: var(--modal-bg);
-            display: flex; /* Para centralizar o conteúdo */
             justify-content: center;
             align-items: center;
         }
@@ -157,11 +195,14 @@
             margin: auto;
             padding: 2em;
             border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
+            width: 90%; /* Ajuste principal para mobile */
+            max-width: 500px; /* Limite em telas maiores que celular */
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
             position: relative;
-            animation: fadeIn 0.3s ease-out; /* Animação ao aparecer */
+            animation: fadeIn 0.3s ease-out;
+            box-sizing: border-box;
+            max-height: 90vh; /* Para garantir que caiba na tela verticalmente */
+            overflow-y: auto; /* Adiciona scroll se o conteúdo for muito grande */
         }
 
         .modal-content h2 {
@@ -169,7 +210,7 @@
             color: var(--light-text);
             margin-top: 0;
             margin-bottom: 1.5em;
-            font-size: 1.8em;
+            font-size: 1.8em; /* Tamanho do título do pop-up no desktop */
             border-bottom: 2px solid var(--primary-red);
             padding-bottom: 0.5em;
         }
@@ -177,7 +218,7 @@
         .modal-platforms {
             display: flex;
             flex-direction: column;
-            gap: 15px; /* Espaçamento entre os botões */
+            gap: 15px;
         }
 
         .modal-platform-button {
@@ -195,17 +236,24 @@
             border: none;
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
         }
 
-        .modal-platform-button:hover {
-            background-color: var(--modal-button-hover);
-            transform: translateY(-2px);
+        .modal-platform-button.disabled {
+            background-color: var(--alert-bg);
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .modal-platform-button.disabled:hover {
+            background-color: var(--alert-bg);
+            transform: none;
         }
 
         .modal-platform-button img {
-            height: 24px; /* Tamanho do ícone da plataforma */
+            height: 24px;
             margin-right: 10px;
-            filter: brightness(0) invert(1); /* Deixa os ícones brancos */
+            filter: brightness(0) invert(1);
         }
 
         .close-button {
@@ -232,61 +280,83 @@
 
         /* Media Queries para Responsividade */
         @media (max-width: 768px) {
+            /* Cabeçalho no celular */
             header h1 {
-                font-size: 2em;
+                font-size: 1.8em; /* Título principal menor */
             }
-
             header p {
-                font-size: 1em;
+                font-size: 0.8em; /* Texto menor no cabeçalho */
+            }
+            header {
+                padding: 0.8em; /* Padding ainda menor */
             }
 
-            /* Duas colunas em telas menores para tablets e celulares maiores */
+            /* Duas colunas em telas menores (tablets e celulares maiores) */
             #product-grid {
-                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* Ajustado para 2 colunas */
-                gap: 15px; /* Reduz o gap para caber mais */
-                padding: 1em;
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Miniatura menor, força 2 colunas */
+                gap: 10px; /* Espaçamento menor */
+                padding: 1em; /* Padding do grid ajustado */
+                margin: 0.5em auto; /* Margem ajustada */
             }
 
             .product-card {
-                margin: 0; /* Remove margem extra */
+                margin: 0;
             }
 
             .product-card img {
-                height: 150px; /* Reduz a altura da imagem no mobile */
+                height: 120px; /* Altura da imagem no mobile */
             }
 
             .product-info {
-                padding: 1em; /* Reduz padding do info */
+                padding: 0.6em; /* Reduz padding do info */
             }
 
             .product-info h3 {
-                font-size: 1.1em; /* Reduz tamanho da fonte */
+                font-size: 0.9em; /* Título do produto menor para caber melhor */
+                margin-bottom: 0.1em;
             }
 
             .product-info p {
-                font-size: 0.8em;
+                font-size: 0.7em; /* Descrição ainda menor */
+                margin-bottom: 0.5em;
             }
 
             .price {
-                font-size: 1.2em;
+                font-size: 1.1em; /* Preço menor */
             }
 
+            .access-button {
+                font-size: 0.8em; /* Botão menor */
+                padding: 0.5em 0.8em;
+                width: calc(100% - 1.2em); /* Ajusta a largura para o padding */
+                margin: 0.8em auto;
+            }
+
+            /* Rodapé no celular */
+            footer {
+                padding: 0.8em; /* Padding menor */
+                font-size: 0.7em; /* Fonte menor */
+            }
+
+            /* Pop-up Responsivo para Celular */
             .modal-content {
-                width: 95%;
-                padding: 1.5em;
+                width: 95%; /* Ocupa 95% da largura da tela */
+                max-width: 380px; /* Limite em telas maiores que celular */
+                padding: 1.2em; /* Diminui o padding interno */
             }
 
             .modal-content h2 {
-                font-size: 1.5em;
+                font-size: 1.5em; /* Título do modal menor */
+                margin-bottom: 1em;
             }
 
             .modal-platform-button {
-                font-size: 1em;
-                padding: 0.8em 1em;
+                font-size: 0.95em; /* Texto do botão menor */
+                padding: 0.8em 1em; /* Padding dos botões menor */
             }
 
             .modal-platform-button img {
-                height: 20px;
+                height: 18px; /* Ícone menor */
                 margin-right: 8px;
             }
 
@@ -296,20 +366,74 @@
                 right: 15px;
             }
         }
+        
+        /* Media Query para telas muito pequenas (ex: celulares menores de 360px) */
+        @media (max-width: 420px) {
+            header h1 {
+                font-size: 1.5em; /* Título principal ainda menor */
+            }
+            header p {
+                display: none; /* Esconde o subtítulo no cabeçalho para economizar espaço */
+            }
 
-        /* Media Query para telas muito pequenas (ex: celulares menores) */
-        @media (max-width: 480px) {
             #product-grid {
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Ainda tentando duas, mas menores */
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Miniatura ainda menor */
+                gap: 8px;
+                padding: 0.6em;
             }
+
             .product-card img {
-                height: 120px;
+                height: 90px; /* Altura da imagem bem menor */
             }
+
+            .product-info {
+                padding: 0.4em;
+            }
+
             .product-info h3 {
-                font-size: 1em;
+                font-size: 0.8em; /* Título do produto ainda menor */
+                line-height: 1.2;
             }
+
             .product-info p {
-                display: none; /* Esconde a descrição para economizar espaço */
+                display: none; /* Esconde a descrição para garantir que cabem 2 colunas */
+            }
+
+            .price {
+                font-size: 0.9em; /* Preço menor */
+            }
+
+            .access-button {
+                font-size: 0.7em; /* Botão menor */
+                padding: 0.4em 0.6em;
+                width: calc(100% - 1em);
+                margin: 0.5em auto;
+            }
+
+            footer {
+                padding: 0.6em;
+                font-size: 0.65em;
+            }
+
+            .modal-content {
+                width: 95%;
+                max-width: none;
+                padding: 0.8em;
+            }
+
+            .modal-content h2 {
+                font-size: 1.3em;
+                margin-bottom: 0.8em;
+            }
+
+            .modal-platform-button {
+                font-size: 0.85em;
+                padding: 0.6em 0.8em;
+            }
+
+            .modal-platform-button img {
+                height: 16px;
+                margin-right: 6px;
             }
         }
     </style>
@@ -320,8 +444,10 @@
         <p>Seu atalho para as melhores ofertas e produtos!</p>
     </header>
 
-    <main id="product-grid">
-        </main>
+    <main>
+        <div id="product-grid">
+            </div>
+    </main>
 
     <footer>
         <p>&copy; 2025 JCRS Plataformas de Compras. Todos os direitos reservados.</p>
@@ -346,17 +472,23 @@
             const modalPlatforms = document.getElementById('modalPlatforms');
 
             // Array de objetos com os dados dos seus produtos
-            // AGORA COM UM ARRAY DE LINKS PARA CADA PRODUTO!
             const products = [
                 {
                     name: "Smart TV 4K Ultra HD 50 polegadas",
                     description: "A melhor experiência de entretenimento com cores vibrantes e som imersivo.",
                     price: "R$ 2.499,00",
-                    image: "imagens/tv.jpg", // Certifique-se de que a imagem está na pasta 'imagens'
-                    links: [ // AGORA UM ARRAY DE LINKS!
+                    image: "imagens/tv.jpg",
+                    links: [
                         { platform: "Amazon", url: "https://seulink.amazon.com/tv4k", icon: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" },
                         { platform: "Magazine Luiza", url: "https://seulink.magalu.com/tv4k", icon: "https://upload.wikimedia.org/wikipedia/commons/d/da/Magalu_logo.svg" },
-                        { platform: "Casas Bahia", url: "https://seulink.casasbahia.com/tv4k", icon: "https://upload.wikimedia.org/wikipedia/commons/e/e4/Casas_Bahia_logo.svg" }
+                        { platform: "Casas Bahia", url: "https://seulink.casasbahia.com/tv4k", icon: "https://upload.wikimedia.org/wikipedia/commons/e/e4/Casas_Bahia_logo.svg" },
+                        { platform: "Mercado Livre", url: "https://seulink.mercadolivre.com/tv4k", icon: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Mercado_Livre_Logo.svg" },
+                        { platform: "Shopee", url: null, icon: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Shopee_logo_icon.svg" },
+                        { platform: "AliExpress", url: "https://seulink.aliexpress.com/tv4k", icon: "https://upload.wikimedia.org/wikipedia/commons/f/fe/AliExpress_Logo.svg" },
+                        { platform: "Submarino", url: "https://seulink.submarino.com/tv4k", icon: "https://upload.wikimedia.org/wikipedia/commons/e/ed/Submarino_logo_2021.svg" },
+                        { platform: "Americanas", url: "https://seulink.americanas.com/tv4k", icon: "https://upload.wikimedia.org/wikipedia/commons/4/43/Americanas_logo.svg" },
+                        { platform: "Ponto", url: "https://seulink.ponto.com/tv4k", icon: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Ponto_logo.svg" },
+                        { platform: "Carrefour", url: "https://seulink.carrefour.com/tv4k", icon: "https://upload.wikimedia.org/wikipedia/commons/3/30/Carrefour_logo.svg" }
                     ]
                 },
                 {
@@ -366,7 +498,11 @@
                     image: "imagens/fone.jpg",
                     links: [
                         { platform: "Shopee", url: "https://seulink.shopee.com/fonebluetooth", icon: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Shopee_logo_icon.svg" },
-                        { platform: "AliExpress", url: "https://seulink.aliexpress.com/fonebluetooth", icon: "https://upload.wikimedia.org/wikipedia/commons/f/fe/AliExpress_Logo.svg" }
+                        { platform: "AliExpress", url: "https://seulink.aliexpress.com/fonebluetooth", icon: "https://upload.wikimedia.org/wikipedia/commons/f/fe/AliExpress_Logo.svg" },
+                        { platform: "Amazon", url: "https://seulink.amazon.com/fonebluetooth", icon: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" },
+                        { platform: "Magazine Luiza", url: "https://seulink.magalu.com/fonebluetooth", icon: "https://upload.wikimedia.org/wikipedia/commons/d/da/Magalu_logo.svg" },
+                        { platform: "Mercado Livre", url: "https://seulink.mercadolivre.com/fonebluetooth", icon: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Mercado_Livre_Logo.svg" },
+                        { platform: "Kabum!", url: null, icon: "https://upload.wikimedia.org/wikipedia/commons/a/a2/Kabum%21_logo.svg" }
                     ]
                 },
                 {
@@ -376,7 +512,9 @@
                     image: "imagens/cafeteira.jpg",
                     links: [
                         { platform: "Mercado Livre", url: "https://seulink.mercadolivre.com/cafeteira", icon: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Mercado_Livre_Logo.svg" },
-                        { platform: "Magazine Luiza", url: "https://seulink.magalu.com/cafeteira", icon: "https://upload.wikimedia.org/wikipedia/commons/d/da/Magalu_logo.svg" }
+                        { platform: "Magazine Luiza", url: "https://seulink.magalu.com/cafeteira", icon: "https://upload.wikimedia.org/wikipedia/commons/d/da/Magalu_logo.svg" },
+                        { platform: "Amazon", url: "https://seulink.amazon.com/cafeteira", icon: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" },
+                        { platform: "Casas Bahia", url: "https://seulink.casasbahia.com/cafeteira", icon: "https://upload.wikimedia.org/wikipedia/commons/e/e4/Casas_Bahia_logo.svg" }
                     ]
                 },
                 {
@@ -386,7 +524,8 @@
                     image: "imagens/notebook.jpg",
                     links: [
                         { platform: "Amazon", url: "https://seulink.amazon.com/notebookgamer", icon: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" },
-                        { platform: "Kabum!", url: "https://seulink.kabum.com/notebookgamer", icon: "https://upload.wikimedia.org/wikipedia/commons/a/a2/Kabum%21_logo.svg" }
+                        { platform: "Kabum!", url: "https://seulink.kabum.com/notebookgamer", icon: "https://upload.wikimedia.org/wikipedia/commons/a/a2/Kabum%21_logo.svg" },
+                        { platform: "Mercado Livre", url: "https://seulink.mercadolivre.com/notebookgamer", icon: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Mercado_Livre_Logo.svg" }
                     ]
                 },
                 {
@@ -396,7 +535,8 @@
                     image: "imagens/maquiagem.jpg",
                     links: [
                         { platform: "Beleza na Web", url: "https://seulink.belezanaweb.com/kitmaquiagem", icon: "https://upload.wikimedia.org/wikipedia/commons/c/c8/Beleza_na_Web_logo.svg" },
-                        { platform: "O Boticário", url: "https://seulink.oboticario.com/kitmaquiagem", icon: "https://upload.wikimedia.org/wikipedia/commons/a/ab/O_Boticario_logo.svg" }
+                        { platform: "O Boticário", url: "https://seulink.oboticario.com/kitmaquiagem", icon: "https://upload.wikimedia.org/wikipedia/commons/a/ab/O_Boticario_logo.svg" },
+                        { platform: "Amazon", url: "https://seulink.amazon.com/kitmaquiagem", icon: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" }
                     ]
                 },
                 {
@@ -407,22 +547,10 @@
                     links: [
                         { platform: "AliExpress", url: "https://seulink.aliexpress.com/smartwatch", icon: "https://upload.wikimedia.org/wikipedia/commons/f/fe/AliExpress_Logo.svg" },
                         { platform: "Shopee", url: "https://seulink.shopee.com/smartwatch", icon: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Shopee_logo_icon.svg" },
-                        { platform: "Mercado Livre", url: "https://seulink.mercadolivre.com/smartwatch", icon: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Mercado_Livre_Logo.svg" }
+                        { platform: "Mercado Livre", url: "https://seulink.mercadolivre.com/smartwatch", icon: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Mercado_Livre_Logo.svg" },
+                        { platform: "Amazon", url: "https://seulink.amazon.com/smartwatch", icon: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" }
                     ]
                 }
-                // Adicione mais produtos seguindo o mesmo padrão:
-                /*
-                {
-                    name: "Nome do Produto",
-                    description: "Breve descrição do produto para atrair a atenção.",
-                    price: "R$ XXX,XX",
-                    image: "imagens/nomedaimagem.jpg",
-                    links: [
-                        { platform: "NomeDaLoja1", url: "SEU_LINK_AFILIADO_LOJA1", icon: "URL_DO_ICONE_DA_LOJA1" },
-                        { platform: "NomeDaLoja2", url: "SEU_LINK_AFILIADO_LOJA2", icon: "URL_DO_ICONE_DA_LOJA2" }
-                    ]
-                },
-                */
             ];
 
             // Função para criar o HTML de um card de produto
@@ -430,35 +558,43 @@
                 const productCard = document.createElement('div');
                 productCard.classList.add('product-card');
 
-                // Adiciona um listener para abrir o modal quando o card for clicado
-                productCard.addEventListener('click', () => {
-                    openModal(product);
-                });
-
                 productCard.innerHTML = `
                     <img src="${product.image}" alt="${product.name}">
                     <div class="product-info">
                         <h3>${product.name}</h3>
                         <p>${product.description}</p>
                         <div class="price">${product.price}</div>
-                        </div>
+                        <a href="#" class="access-button" data-product-name="${product.name}">Acessar Produto</a>
+                    </div>
                 `;
                 return productCard;
             }
 
             // Função para abrir o modal
-            function openModal(product) {
-                modalProductName.textContent = product.name; // Define o nome do produto no modal
-                modalPlatforms.innerHTML = ''; // Limpa os botões anteriores
+            function openModal(productName) {
+                const product = products.find(p => p.name === productName);
+                if (!product) return; 
 
-                // Cria os botões para cada plataforma de link
+                modalProductName.textContent = product.name;
+                modalPlatforms.innerHTML = '';
+
                 product.links.forEach(link => {
                     const button = document.createElement('a');
-                    button.href = link.url;
-                    button.target = "_blank"; // Abre em nova aba
+                    
+                    if (link.url && link.url.startsWith('http')) {
+                        button.href = link.url;
+                        button.target = "_blank";
+                    } else {
+                        button.href = "#";
+                        button.classList.add('disabled');
+                        button.onclick = (event) => {
+                            event.preventDefault();
+                            alert('No momento esta loja não tem este produto ou não há opção ainda, escolha outra loja.');
+                        };
+                    }
+                    
                     button.classList.add('modal-platform-button');
 
-                    // Adiciona ícone se houver
                     if (link.icon) {
                         const icon = document.createElement('img');
                         icon.src = link.icon;
@@ -470,7 +606,7 @@
                     modalPlatforms.appendChild(button);
                 });
 
-                productModal.style.display = 'flex'; // Torna o modal visível
+                productModal.style.display = 'flex';
             }
 
             // Função para fechar o modal
@@ -479,8 +615,8 @@
             }
 
             // Event Listeners para o modal
-            closeButton.addEventListener('click', closeModal); // Fecha ao clicar no 'X'
-            window.addEventListener('click', (event) => { // Fecha ao clicar fora do conteúdo do modal
+            closeButton.addEventListener('click', closeModal);
+            window.addEventListener('click', (event) => {
                 if (event.target == productModal) {
                     closeModal();
                 }
@@ -490,6 +626,15 @@
             products.forEach(product => {
                 const card = createProductCard(product);
                 productGrid.appendChild(card);
+            });
+
+            // Adiciona o listener aos botões "Acessar Produto" para abrir o modal
+            productGrid.addEventListener('click', (event) => {
+                if (event.target.classList.contains('access-button')) {
+                    event.preventDefault();
+                    const productName = event.target.dataset.productName;
+                    openModal(productName);
+                }
             });
         });
     </script>
