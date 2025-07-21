@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JCRS Plataformas de Compras</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos CSS (Antigo style.css) */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+        :root {
+            --primary-red: #E74C3C; /* Vermelho principal */
+            --dark-bg: #2C3E50;    /* Preto/Azul escuro para fundo */
+            --light-text: #ECF0F1; /* Branco/Cinza claro para texto */
+            --button-hover: #C0392B; /* Vermelho mais escuro para hover */
+            --card-bg: #34495E;    /* Cor de fundo para os cards dos produtos */
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Cabeçalho */
+        header {
+            background-color: var(--primary-red);
+            color: var(--light-text);
+            padding: 2em 1em;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        /* Container de Produtos */
+        #product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Colunas responsivas */
+            gap: 25px; /* Espaçamento entre os cards */
+            padding: 2em;
+            max-width: 1200px;
+            margin: 2em auto; /* Centraliza e adiciona margem */
+            flex-grow: 1; /* Permite que o grid ocupe o espaço restante */
+        }
+
+        /* Card de Produto */
+        .product-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            overflow: hidden; /* Garante que a imagem não vaze */
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Para empurrar o botão para baixo */
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px); /* Efeito de elevação ao passar o mouse */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px; /* Altura fixa para as imagens */
+            object-fit: cover; /* Garante que a imagem preencha o espaço sem distorcer */
+            border-bottom: 2px solid var(--primary-red);
+        }
+
+        .product-info {
+            padding: 1.5em;
+            flex-grow: 1; /* Permite que as informações ocupem o espaço necessário */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-info h3 {
+            font-size: 1.4em;
+            margin-top: 0;
+            margin-bottom: 0.5em;
+            color: var(--light-text);
+        }
+
+        .product-info p {
+            font-size: 0.95em;
+            color: var(--light-text);
+            opacity: 0.8;
+            margin-bottom: 1em;
+        }
+
+        .price {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin-bottom: 1em;
+        }
+
+        /* Botão "Acessar Produto" */
+        .access-button {
+            display: block; /* Ocupa a largura total */
+            width: calc(100% - 2em); /* Largura com padding */
+            padding: 0.8em 1.5em;
+            margin: 1em auto; /* Centraliza o botão dentro do card */
+            background-color: var(--primary-red);
+            color: var(--light-text);
+            text-decoration: none;
+            border-radius: 50px; /* Botão arredondado */
+            font-weight: 700;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .access-button:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-2px); /* Efeito de "apertar" */
+        }
+
+        /* Rodapé */
+        footer {
+            background-color: var(--primary-red);
+            color: var(--light-text);
+            text-align: center;
+            padding: 1.5em 1em;
+            font-size: 0.9em;
+            margin-top: auto; /* Empurra o rodapé para baixo */
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Media Queries para Responsividade */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            header p {
+                font-size: 1em;
+            }
+
+            #product-grid {
+                grid-template-columns: 1fr; /* Uma coluna em telas pequenas */
+                padding: 1em;
+            }
+
+            .product-card {
+                margin: 0 0.5em; /* Pequena margem lateral em telas pequenas */
+            }
+
+            .product-info h3 {
+                font-size: 1.2em;
+            }
+
+            .price {
+                font-size: 1.4em;
+            }
+
+            .access-button {
+                font-size: 1em;
+                padding: 0.7em 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>JCRS Plataformas de Compras</h1>
+        <p>Seu atalho para as melhores ofertas e produtos!</p>
+    </header>
+
+    <main id="product-grid">
+        </main>
+
+    <footer>
+        <p>&copy; 2025 JCRS Plataformas de Compras. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // Código JavaScript (Antigo script.js)
+        document.addEventListener('DOMContentLoaded', () => {
+            const productGrid = document.getElementById('product-grid');
+
+            // Array de objetos com os dados dos seus produtos
+            // ADICIONE SEUS PRODUTOS AQUI!
+            const products = [
+                {
+                    name: "Smart TV 4K Ultra HD 50 polegadas",
+                    description: "A melhor experiência de entretenimento com cores vibrantes e som imersivo.",
+                    price: "R$ 2.499,00",
+                    image: "imagens/tv.jpg", // Certifique-se de que a imagem está na pasta 'imagens'
+                    link: "https://seulink.amazon.com/tv4k" // SEU LINK DE AFILIADO AQUI (Amazon, Magazine Luiza, etc.)
+                },
+                {
+                    name: "Fone de Ouvido Bluetooth Premium",
+                    description: "Cancelamento de ruído, bateria de longa duração e áudio cristalino para o seu dia a dia.",
+                    price: "R$ 349,90",
+                    image: "imagens/fone.jpg", // Certifique-se de que a imagem está na pasta 'imagens'
+                    link: "https://seulink.shopee.com/fonebluetooth" // SEU LINK DE AFILIADO AQUI (Shopee, AliExpress, etc.)
+                },
+                {
+                    name: "Cafeteira Expresso Automática",
+                    description: "Prepare seu café favorito com um toque. Design elegante e fácil de limpar.",
+                    price: "R$ 899,00",
+                    image: "imagens/cafeteira.jpg", // Certifique-se de que a imagem está na pasta 'imagens'
+                    link: "https://seulink.magalu.com/cafeteira" // SEU LINK DE AFILIADO AQUI
+                },
+                {
+                    name: "Notebook Gamer Alta Performance",
+                    description: "Perfeito para jogos e trabalho pesado. Processador de última geração e placa de vídeo potente.",
+                    price: "R$ 5.999,00",
+                    image: "imagens/notebook.jpg", // Certifique-se de que a imagem está na pasta 'imagens'
+                    link: "https://seulink.outraplataforma.com/notebookgamer" // SEU LINK DE AFILIADO AQUI
+                },
+                {
+                    name: "Kit Essencial de Maquiagem",
+                    description: "Tudo o que você precisa para uma make completa e profissional. Cores vibrantes e duradouras.",
+                    price: "R$ 179,50",
+                    image: "imagens/maquiagem.jpg",
+                    link: "https://seulink.beleza.com/kitmaquiagem"
+                },
+                {
+                    name: "Smartwatch Fitness Monitor Cardíaco",
+                    description: "Monitore sua saúde e atividades físicas com estilo. Bateria de longa duração e design moderno.",
+                    price: "R$ 289,90",
+                    image: "imagens/smartwatch.jpg",
+                    link: "https://seulink.eletronicos.com/smartwatch"
+                },
+  		{
+                    name: "Smart TV 4K Ultra HD 50 polegadas",
+                    description: "A melhor experiência de entretenimento com cores vibrantes e som imersivo.",
+                    price: "R$ 2.499,00",
+                    image: "imagens/tv.jpg", // Certifique-se de que a imagem está na pasta 'imagens'
+                    link: "https://seulink.amazon.com/tv4k" // SEU LINK DE AFILIADO AQUI (Amazon, Magazine Luiza, etc.)
+                },
+                {
+                    name: "Fone de Ouvido Bluetooth Premium",
+                    description: "Cancelamento de ruído, bateria de longa duração e áudio cristalino para o seu dia a dia.",
+                    price: "R$ 349,90",
+                    image: "imagens/fone.jpg", // Certifique-se de que a imagem está na pasta 'imagens'
+                    link: "https://seulink.shopee.com/fonebluetooth" // SEU LINK DE AFILIADO AQUI (Shopee, AliExpress, etc.)
+                },
+                {
+                    name: "Cafeteira Expresso Automática",
+                    description: "Prepare seu café favorito com um toque. Design elegante e fácil de limpar.",
+                    price: "R$ 899,00",
+                    image: "imagens/cafeteira.jpg", // Certifique-se de que a imagem está na pasta 'imagens'
+                    link: "https://seulink.magalu.com/cafeteira" // SEU LINK DE AFILIADO AQUI
+                },
+                {
+                    name: "Notebook Gamer Alta Performance",
+                    description: "Perfeito para jogos e trabalho pesado. Processador de última geração e placa de vídeo potente.",
+                    price: "R$ 5.999,00",
+                    image: "imagens/notebook.jpg", // Certifique-se de que a imagem está na pasta 'imagens'
+                    link: "https://seulink.outraplataforma.com/notebookgamer" // SEU LINK DE AFILIADO AQUI
+                },
+                {
+                    name: "Kit Essencial de Maquiagem",
+                    description: "Tudo o que você precisa para uma make completa e profissional. Cores vibrantes e duradouras.",
+                    price: "R$ 179,50",
+                    image: "imagens/maquiagem.jpg",
+                    link: "https://seulink.beleza.com/kitmaquiagem"
+                },
+                {
+                    name: "Smartwatch Fitness Monitor Cardíaco",
+                    description: "Monitore sua saúde e atividades físicas com estilo. Bateria de longa duração e design moderno.",
+                    price: "R$ 289,90",
+                    image: "imagens/smartwatch.jpg",
+                    link: "https://seulink.eletronicos.com/smartwatch"
+                }
+
+                // Adicione mais produtos seguindo o mesmo padrão:
+                /*
+                {
+                    name: "Nome do Produto",
+                    description: "Breve descrição do produto para atrair a atenção.",
+                    price: "R$ XXX,XX",
+                    image: "imagens/nomedaimagem.jpg",
+                    link: "SEU_LINK_DE_AFILIADO_AQUI"
+                },
+                */
+            ];
+
+            // Função para criar o HTML de um card de produto
+            function createProductCard(product) {
+                const productCard = document.createElement('div');
+                productCard.classList.add('product-card');
+
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p>${product.description}</p>
+                        <div class="price">${product.price}</div>
+                        <a href="${product.link}" target="_blank" class="access-button">Acessar Produto</a>
+                    </div>
+                `;
+                return productCard;
+            }
+
+            // Adiciona cada produto ao grid
+            products.forEach(product => {
+                const card = createProductCard(product);
+                productGrid.appendChild(card);
+            });
+        });
+    </script>
+</body>
+</html>
